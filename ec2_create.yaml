@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  connection: local
+ 
+  tasks: 
+  - name: Create Ec2 instances
+    amazon.aws.ec2_instance:
+      name: "{{ item.name }}"
+      key_name: "aws-keypair"
+      instance_type: t2.micro
+      security_group: default
+      region: ap-south-1
+      access_key: "{{ec2_access_key}}"
+      secret_key: "{{ec2_secret_key}}"
+      network:
+        assign_public_ip: true
+      image_id: "{{ item.id }}"
+      tags: 
+        environment: "{{ item.name}}"
+    loop:
+     - { id: "ami-0d03cb826412c6b0f", name: "manage-node-1" }
+     - { id: "ami-0f918f7e67a3323f0", name: "manage-node-2" }
+     - { id: "ami-0f918f7e67a3323f0", name: "manage-node-3" }   
+       
